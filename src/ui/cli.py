@@ -58,6 +58,52 @@ def play_vs_ai():
             print(f"L'IA joue : {ai_move}\n")
 
     print("Partie terminée !")
+def play_vs_ai():
+    """Mode joueur vs IA"""
+    board = ChessBoard()
+    ai = ChessAI()
+
+    color = input("Voulez-vous jouer avec les Blancs (b) ou les Noirs (n) ? ").strip().lower()
+    player_is_white = color == "b"
+
+    print("Vous jouez contre l'IA Stockfish ! Tapez 'exit' pour quitter.\n")
+
+    while not board.is_game_over():
+        draw_board()
+        draw_pieces()
+        pygame.display.flip()
+
+        if (board.board.turn == chess.WHITE and player_is_white) or (board.board.turn == chess.BLACK and not player_is_white):
+            move = input("Entrez votre coup (ex: e2e4) : ")
+            if move.lower() == "exit":
+                print("Partie interrompue.")
+                break
+
+            if chess.Move.from_uci(move) in board.board.legal_moves:
+                start_square = chess.parse_square(move[:2])
+                end_square = chess.parse_square(move[2:])
+
+                piece = board.board.piece_at(start_square).symbol()
+                animate_move(piece,
+                             (chess.square_file(start_square) * SQUARE_SIZE, (7 - chess.square_rank(start_square)) * SQUARE_SIZE),
+                             (chess.square_file(end_square) * SQUARE_SIZE, (7 - chess.square_rank(end_square)) * SQUARE_SIZE))
+
+                board.move(move)
+
+                # Tour de l'IA après le joueur
+                if not board.is_game_over():
+                    ai_move = ai.get_best_move(board.board.fen())
+                    start_square = chess.parse_square(ai_move[:2])
+                    end_square = chess.parse_square(ai_move[2:])
+
+                    piece = board.board.piece_at(start_square).symbol()
+                    animate_move(piece,
+                                 (chess.square_file(start_square) * SQUARE_SIZE, (7 - chess.square_rank(start_square)) * SQUARE_SIZE),
+                                 (chess.square_file(end_square) * SQUARE_SIZE, (7 - chess.square_rank(end_square)) * SQUARE_SIZE))
+
+                    board.move(ai_move)
+
+    print("Partie terminée !")
 
 def print_board(board, player_is_white=True):
     """Affiche l'échiquier avec un quadrillage et les coordonnées correctement orientées."""
