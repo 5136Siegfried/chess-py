@@ -1,0 +1,21 @@
+- name: Installer Stockfish sur la VM Chess
+  hosts: all
+  become: yes
+  tasks:
+    - name: Mettre à jour les paquets
+      apt:
+        update_cache: yes
+
+    - name: Installer Stockfish
+      apt:
+        name: stockfish
+        state: present
+
+    - name: Vérifier l'installation de Stockfish
+      command: stockfish
+      register: stockfish_output
+      changed_when: false
+
+    - name: Afficher la version de Stockfish
+      debug:
+        msg: "Stockfish installé : {{ stockfish_output.stdout_lines }}"

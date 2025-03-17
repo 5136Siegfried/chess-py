@@ -6,3 +6,8 @@ resource "aws_s3_bucket" "chess_storage" {
     Environment = var.environment
   }
 }
+
+resource "aws_s3_bucket_object" "chess_games_folder" {
+  bucket = aws_s3_bucket.chess_storage.id
+  key    = "games/"
+}
