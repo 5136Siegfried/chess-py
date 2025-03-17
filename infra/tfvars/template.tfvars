@@ -1,0 +1,6 @@
+environment = "dev"
+key_name = "key_name"
+app_name = "chess"
+aws_region = "eu-west-3"
+instance_type = "t3.micro"
+repo_url = "https://github.com/5136Siegfried/chess-game.git"

@@ -1,0 +1,23 @@
+# Fichier: infra/setup.yml
+- name: Setup Chess Server
+  hosts: chess_server
+  become: true
+  vars:
+    repo_url: "{{ lookup('env', 'CHESS_GAME_REPO') | default('https://github.com/5136Siegfried/chess-py.git', true) }}"
+  tasks:
+    - name: Install dependencies
+      apt:
+        name: ["python3", "python3-pip", "stockfish", "nginx"]
+        state: latest
+
+    - name: Clone repo Chess Game
+      git:
+        repo: "{{ repo_url }}"
+        dest: "/opt/chess-py"
+        version: main
+        force: yes
+
+    - name: Start Chess Game
+      shell: "nohup python3 /opt/chess-game/src/main.py &"
+      async: 1000
+      poll: 0
