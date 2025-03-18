@@ -1,0 +1,13 @@
+version: "3.8"
+
+services:
+  chess-app:
+    build: ./app
+    container_name: chess_server
+    ports:
+      - "5000:5000"
+    volumes:
+      - ./app:/app
+    environment:
+      - FLASK_ENV=production
+    restart: unless-stopped
