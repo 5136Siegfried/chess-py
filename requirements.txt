@@ -5,3 +5,4 @@ boto3
 pytest
 pygame
 python-chess
+checkov

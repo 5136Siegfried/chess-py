@@ -29,3 +29,14 @@ variable "s3_bucket_name" {
   description = "Nom du bucket S3"
   default     = "chess-game-bucket"
 }
+
+variable "alb_name" {
+  description = "Nom du Load Balancer"
+  default     = "chess-load-balancer"
+}
+
+variable "alb_subnets" {
+  description = "Liste des sous-réseaux pour le Load Balancer"
+  type        = list(string)
+  default     = []
+}
