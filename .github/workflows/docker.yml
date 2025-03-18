@@ -1,0 +1,38 @@
+name: Déploiement Docker sur EC2
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Dispatcher"]
+    types:
+      - completed
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.docker == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: 🔑 Configurer SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 🐳 Build et push de l'image Docker
+        run: |
+          docker login -u ${{ secrets.DOCKERHUB_USERNAME }} -p ${{ secrets.DOCKERHUB_PASSWORD }}
+          docker build -t ${{ secrets.DOCKERHUB_USERNAME }}/chess-app:latest infra/chess-server/app/
+          docker push ${{ secrets.DOCKERHUB_USERNAME }}/chess-app:latest
+
+      - name: 🚀 Déployer sur EC2
+        run: |
+          ssh ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            docker pull ${{ secrets.DOCKERHUB_USERNAME }}/chess-app:latest
+            cd infra/chess-server
+            docker-compose down
+            docker-compose up -d
+          EOF

@@ -1,0 +1,59 @@
+name: CI/CD Dispatcher
+
+on:
+  push:
+    branches:
+      - main
+      - dev
+  pull_request:
+    branches:
+      - main
+      - dev
+
+jobs:
+  detect_changes:
+    runs-on: ubuntu-latest
+    outputs:
+      terraform: ${{ steps.filter.outputs.terraform }}
+      docker: ${{ steps.filter.outputs.docker }}
+      monitoring: ${{ steps.filter.outputs.monitoring }}
+      tests: ${{ steps.filter.outputs.tests }}
+      environment: ${{ steps.env_detect.outputs.env }}
+
+    steps:
+      - name: 🔄 Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: 🔍 Détection de l'environnement
+        id: env_detect
+        run: |
+          if [[ "${{ github.ref }}" == "refs/heads/main" ]]; then
+            echo "env=prod" >> $GITHUB_ENV
+          else
+            echo "env=dev" >> $GITHUB_ENV
+          fi
+          echo "Detected environment: $GITHUB_ENV"
+
+      - name: 📊 Analyser les fichiers modifiés
+        id: filter
+        uses: dorny/paths-filter@v2
+        with:
+          filters: |
+            terraform:
+              - 'infra/chess-server/terraform/**'
+            docker:
+              - 'infra/chess-server/app/**'
+              - 'infra/chess-server/docker-compose.yml'
+            monitoring:
+              - 'infra/chess-server/monitoring/**'
+            tests:
+              - 'src/**'
+              - 'requirements.txt'
+
+      - name: 🚀 Déclenchement des workflows nécessaires
+        run: |
+          echo "Terraform: ${{ steps.filter.outputs.terraform }}"
+          echo "Docker: ${{ steps.filter.outputs.docker }}"
+          echo "Monitoring: ${{ steps.filter.outputs.monitoring }}"
+          echo "Tests: ${{ steps.filter.outputs.tests }}"
+          echo "Environnement: ${{ steps.env_detect.outputs.env }}"

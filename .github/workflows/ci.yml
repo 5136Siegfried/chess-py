@@ -1,0 +1,30 @@
+name: Tests et Linting
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Dispatcher"]
+    types:
+      - completed
+
+jobs:
+  tests:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.tests == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: 🔧 Installer Python et les dépendances
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.10'
+
+      - name: 📦 Installer les dépendances
+        run: pip install -r requirements.txt
+
+      - name: 🔍 Linting
+        run: flake8 src/ --max-line-length=100
+
+      - name: 🧪 Exécution des tests
+        run: pytest src/tests/

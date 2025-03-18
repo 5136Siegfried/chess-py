@@ -1,0 +1,30 @@
+name: Test du Monitoring
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Dispatcher"]
+    types:
+      - completed
+
+jobs:
+  monitoring:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.monitoring == 'true' }}
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: 🔍 Vérification de Prometheus
+        run: curl -s http://localhost:9090/api/v1/status | grep "prometheus" || exit 1
+
+      - name: 🔍 Vérification de Node Exporter
+        run: curl -s http://localhost:9100/metrics | grep "node_exporter" || exit 1
+
+      - name: 🔍 Vérification de CloudWatch Logs
+        run: |
+          aws logs describe-log-groups --query "logGroups[?logGroupName=='/chess-app/logs']" \
+          --output text || exit 1
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
