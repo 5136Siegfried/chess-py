@@ -1,4 +1,4 @@
-name: Déploiement AWS WAF
+name: Déploiement CloudWatch Dashboard
 
 on:
   workflow_run:
@@ -7,7 +7,7 @@ on:
       - completed
 
 jobs:
-  deploy_waf:
+  deploy_dashboard:
     runs-on: ubuntu-latest
 
     steps:
@@ -27,5 +27,5 @@ jobs:
           AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
           AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
 
-      - name: 📊 Vérifier les logs du WAF
-        run: bash scripts/test_waf.sh
+      - name: 📊 Vérification du Dashboard CloudWatch
+        run: bash scripts/test_cloudwatch_dashboard.sh
