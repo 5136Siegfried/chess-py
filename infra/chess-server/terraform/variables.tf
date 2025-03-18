@@ -1,5 +1,5 @@
 variable "environment" { type = string }
-variable "key_name { type = string }
+variable "key_name" { type = string }
 variable "app_name" { type = string }
 
 variable "aws_region" {
@@ -23,4 +23,9 @@ variable "repo_url" {
   description = "URL du dépôt Git"
   type        = string
   default     = "https://github.com/5136Siegfried/chess-py.git"
+}
+
+variable "s3_bucket_name" {
+  description = "Nom du bucket S3"
+  default     = "chess-game-bucket"
 }

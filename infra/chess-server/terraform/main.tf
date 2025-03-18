@@ -1,7 +1,3 @@
-provider "aws" {
-  region = var.aws_region
-}
-
 resource "aws_instance" "chess_server" {
   ami           = var.instance_ami
   instance_type = var.instance_type
@@ -42,4 +38,8 @@ terraform {
     region         = "eu-west-3"
     encrypt        = true
   }
+}
+
+resource "aws_s3_bucket" "chess_data" {
+  bucket = var.s3_bucket_name
 }
