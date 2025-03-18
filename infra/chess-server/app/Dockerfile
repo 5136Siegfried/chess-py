@@ -15,3 +15,14 @@ EXPOSE 5000
 
 # Commande de démarrage
 CMD ["python", "server.py"]
+
+
+FROM nginx:latest
+
+# Copie de la config Nginx
+COPY nginx.conf /etc/nginx/nginx.conf
+
+# Expose le port HTTPS
+EXPOSE 443
+
+CMD ["nginx", "-g", "daemon off;"]

@@ -1,0 +1,40 @@
+name: Déploiement HTTPS
+
+on:
+  workflow_run:
+    workflows: ["CI/CD Dispatcher"]
+    types:
+      - completed
+
+jobs:
+  deploy_ssl:
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: 🔄 Checkout du repo
+        uses: actions/checkout@v3
+
+      - name: 🚀 Déploiement Terraform
+        run: |
+          cd infra/chess-server/terraform
+          terraform apply -auto-approve
+        env:
+          AWS_ACCESS_KEY_ID: ${{ secrets.AWS_ACCESS_KEY_ID }}
+          AWS_SECRET_ACCESS_KEY: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+
+      - name: 🔑 Configurer SSH
+        run: |
+          mkdir -p ~/.ssh
+          echo "${{ secrets.SSH_PRIVATE_KEY }}" > ~/.ssh/id_rsa
+          chmod 600 ~/.ssh/id_rsa
+          ssh-keyscan -H ${{ secrets.EC2_HOST }} >> ~/.ssh/known_hosts
+
+      - name: 🚀 Déployer Nginx sur EC2
+        run: |
+          ssh ubuntu@${{ secrets.EC2_HOST }} << 'EOF'
+            cd infra/chess-server/app
+            docker-compose up -d
+          EOF
+
+      - name: 🔍 Vérification HTTPS
+        run: bash scripts/test_https.sh

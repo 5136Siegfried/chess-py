@@ -6,3 +6,4 @@ pytest
 pygame
 python-chess
 checkov
+alertsmanager

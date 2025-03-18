@@ -40,3 +40,8 @@ variable "alb_subnets" {
   type        = list(string)
   default     = []
 }
+
+variable "domain_name" {
+  description = "NDD"
+  default     = "5136.fr"
+}
