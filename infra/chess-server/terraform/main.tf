@@ -1,6 +1,10 @@
 resource "aws_instance" "chess_server" {
   ami           = var.instance_ami
   instance_type = var.instance_type
+  key_name      = var.key_name
+  security_groups = [aws_security_group.chess_sg.id]
+  user_data     = file("${path.module}/ec2-userdata.sh")
+
 
   tags = {
     Name = var.app_name

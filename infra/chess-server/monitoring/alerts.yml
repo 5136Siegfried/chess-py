@@ -1,0 +1,20 @@
+groups:
+  - name: ChessAlerts
+    rules:
+      - alert: HighCPUUsage
+        expr: node_cpu_seconds_total > 80
+        for: 1m
+        labels:
+          severity: critical
+        annotations:
+          summary: "CPU Usage High"
+          description: "Le CPU de l'instance dépasse 80% depuis plus d'une minute."
+
+      - alert: InstanceDown
+        expr: up == 0
+        for: 30s
+        labels:
+          severity: warning
+        annotations:
+          summary: "Service Down"
+          description: "Un service ne répond plus à Prometheus."
