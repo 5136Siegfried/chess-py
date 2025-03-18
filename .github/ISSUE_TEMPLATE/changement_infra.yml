@@ -1,0 +1,94 @@
+name: "Amélioration de l'Infrastructure - Modularisation Terraform"
+description: "Séparer les fichiers Terraform en modules autonomes pour améliorer la gestion et le déploiement."
+title: "[Infra] Modularisation Terraform - Séparation des fichiers"
+labels: ["infra", "enhancement", "terraform"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Objectif
+        Actuellement, tous les fichiers Terraform sont centralisés dans un seul dossier, ce qui entraîne des redéploiements complets à chaque modification. Cette issue propose de modulariser l’infrastructure en plusieurs dossiers indépendants.
+
+  - type: checkboxes
+    id: benefits
+    attributes:
+      label: "📌 Bénéfices attendus"
+      options:
+        - label: "Permettre un déploiement modulaire (mise à jour d'un seul module sans impacter l'ensemble de l’infra)"
+          required: false
+        - label: "Améliorer la lisibilité et la maintenabilité du code Terraform"
+          required: false
+        - label: "Séparer clairement les IAM et les accès pour une meilleure sécurité"
+          required: false
+        - label: "Faciliter le debugging et le rollback en cas de problème"
+          required: false
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: "📌 Périmètre"
+      description: "Liste des modules à extraire et organiser"
+      placeholder: |
+        - Module Réseau (VPC, Subnets, Gateways…)
+        - Module Compute (EC2, Lambda, Containers…)
+        - Module IAM (Utilisateurs, rôles, policies…)
+        - Module Base de Données
+        - Module Stockage (S3, EFS…)
+        - Autres modules ?
+    validations:
+      required: false
+
+  - type: textarea
+    id: implementation
+    attributes:
+      label: "🛠️ Proposition de mise en œuvre"
+      description: "Décrire la structure envisagée et les ajustements nécessaires"
+      placeholder: |
+        Exemple :
+        - Créer un dossier `modules/` avec des sous-dossiers dédiés (`network`, `compute`, `iam`…)
+        - Refactorer les fichiers actuels pour qu'ils utilisent `terraform_remote_state` et `outputs` pour la communication inter-modules
+        - Ajouter des workflows CI/CD pour déployer uniquement les modules modifiés
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: "⚠️ Risques potentiels"
+      description: "Quels problèmes potentiels peuvent être rencontrés ?"
+      placeholder: |
+        - Risque de conflit entre les modules lors du refactoring
+        - Besoin d’une migration progressive pour éviter un downtime
+        - Possibles impacts sur les permissions IAM si mal géré
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: "🔗 Dépendances"
+      description: "Autres tickets ou actions à prévoir avant cette implémentation"
+      placeholder: |
+        - Vérification de l'état actuel des ressources Terraform
+        - Audit des dépendances entre modules
+        - Mise en place d’un environnement de test avant déploiement
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "🚀 Priorité"
+      description: "Niveau d'urgence de cette amélioration"
+      options:
+        - "Haute (Critique pour la scalabilité et la sécurité)"
+        - "Moyenne (Amélioration importante mais non bloquante)"
+        - "Basse (Amélioration souhaitée mais pas prioritaire)"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "Merci d'avance pour vos retours et suggestions !"
