@@ -1,0 +1,47 @@
+{
+  "dashboard": {
+    "id": null,
+    "uid": "waf-dashboard",
+    "title": "AWS WAF Dashboard",
+    "timezone": "browser",
+    "panels": [
+      {
+        "type": "timeseries",
+        "title": "🚨 Attaques Bloquées",
+        "targets": [
+          {
+            "datasource": "AWS CloudWatch",
+            "region": "us-east-1",
+            "namespace": "AWS/WAFV2",
+            "metricName": "BlockedRequests",
+            "dimensions": { "WebACL": "chess-waf" }
+          }
+        ]
+      },
+      {
+        "type": "timeseries",
+        "title": "✅ Requêtes Autorisées",
+        "targets": [
+          {
+            "datasource": "AWS CloudWatch",
+            "region": "us-east-1",
+            "namespace": "AWS/WAFV2",
+            "metricName": "AllowedRequests",
+            "dimensions": { "WebACL": "chess-waf" }
+          }
+        ]
+      },
+      {
+        "type": "table",
+        "title": "📊 Top IPs suspectes",
+        "targets": [
+          {
+            "datasource": "AWS CloudWatch",
+            "region": "us-east-1",
+            "query": "fields @timestamp, @message | sort @timestamp desc"
+          }
+        ]
+      }
+    ]
+  }
+}

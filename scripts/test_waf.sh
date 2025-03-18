@@ -16,3 +16,6 @@ curl -X GET "https://chess.example.com/?name=<script>alert(1)</script>"
 
 echo "🚀 Test Rate Limiting (600 requêtes)"
 for i in {1..600}; do curl -s https://chess.example.com/ & done
+
+echo "🚀 Test denylist (Depuis une IP bannie)"
+curl --interface 192.168.1.100 "https://chess.example.com/"

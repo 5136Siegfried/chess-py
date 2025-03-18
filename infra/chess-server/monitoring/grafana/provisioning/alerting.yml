@@ -1,0 +1,20 @@
+apiVersion: 1
+
+contactPoints:
+  - name: "Slack Alerts"
+    receivers:
+      - uid: "slack-notif"
+        type: "slack"
+        settings:
+          url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+          channel: "#security"
+          username: "Grafana-WAF"
+          icon_url: "https://grafana.com/assets/img/grafana_icon.svg"
+
+  - name: "Email Alerts"
+    receivers:
+      - uid: "email-notif"
+        type: "email"
+        settings:
+          addresses: "security-team@example.com"
+          singleEmail: true

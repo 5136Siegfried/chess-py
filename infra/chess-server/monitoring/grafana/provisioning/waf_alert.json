@@ -1,0 +1,16 @@
+{
+  "alert": {
+    "name": "🚨 WAF High Attack Rate",
+    "conditions": [
+      {
+        "evaluator": { "type": "gt", "params": [100] },
+        "operator": { "type": "and" },
+        "query": { "query": "A", "params": [] },
+        "reducer": { "type": "avg", "params": [] }
+      }
+    ],
+    "noDataState": "alerting",
+    "executionErrorState": "alerting",
+    "contactPoint": "Slack Alerts"
+  }
+}
