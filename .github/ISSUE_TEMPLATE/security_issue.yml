@@ -1,0 +1,108 @@
+name: "Problème de Sécurité 🚨"
+description: "Signaler une vulnérabilité ou un risque de sécurité"
+title: "[SECURITY] {Titre du problème}"
+labels: ["security", "critical"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🚨 Problème de Sécurité Identifié
+        **⚠️ Attention :** Ne divulguez pas d’informations sensibles publiquement. Ce rapport sera traité en priorité.
+
+  - type: textarea
+    id: description
+    attributes:
+      label: "🔍 Description du problème"
+      description: "Expliquez en quoi consiste la vulnérabilité et son impact potentiel."
+      placeholder: |
+        - Quel est le problème ?
+        - Quel est l’impact possible ?
+        - Quel module ou composant est concerné ?
+    validations:
+      required: true
+
+  - type: textarea
+    id: reproduction
+    attributes:
+      label: "🧪 Étapes pour reproduire"
+      description: "Expliquez comment reproduire le problème (exemple de requête, action spécifique à effectuer)."
+      placeholder: |
+        1. Aller sur la page / fonctionnalité X
+        2. Entrer la valeur Y
+        3. Obtenir un comportement inattendu (exemple : fuite de données, contournement d’authentification…)
+    validations:
+      required: true
+
+  - type: textarea
+    id: expected_behavior
+    attributes:
+      label: "✅ Comportement attendu"
+      description: "Quel devrait être le comportement normal sans la faille de sécurité ?"
+      placeholder: |
+        - L'utilisateur ne devrait pas avoir accès à ces données
+        - Le système devrait refuser cette action
+    validations:
+      required: false
+
+  - type: textarea
+    id: impact
+    attributes:
+      label: "⚠️ Impact potentiel"
+      description: "Quel est le niveau de danger de cette vulnérabilité ?"
+      placeholder: |
+        - Violation de données personnelles
+        - Prise de contrôle d'un compte utilisateur
+        - Accès non autorisé à des ressources critiques
+    validations:
+      required: true
+
+  - type: checkboxes
+    id: severity
+    attributes:
+      label: "🚦 Niveau de sévérité"
+      options:
+        - label: "🟥 Critique - Peut entraîner une compromission complète du système"
+          required: false
+        - label: "🟧 Haute - Fuite de données ou impact majeur sur la sécurité"
+          required: false
+        - label: "🟨 Moyenne - Exploitable mais avec des restrictions"
+          required: false
+        - label: "🟩 Basse - Vulnérabilité mineure ou contournable"
+          required: false
+
+  - type: textarea
+    id: mitigation
+    attributes:
+      label: "🛠️ Solutions possibles"
+      description: "Des suggestions pour corriger le problème ?"
+      placeholder: |
+        - Vérifier les permissions d'accès
+        - Filtrer les entrées utilisateur pour éviter l'injection SQL
+    validations:
+      required: false
+
+  - type: dropdown
+    id: disclosure
+    attributes:
+      label: "🔒 Confidentialité"
+      description: "Cette vulnérabilité doit-elle être traitée en privé ?"
+      options:
+        - "Oui - Signaler en privé avant toute action publique"
+        - "Non - Peut être discutée ouvertement"
+    validations:
+      required: true
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: "🔗 Dépendances"
+      description: "Ce problème est-il lié à une autre issue ou dépendance externe (ex: bibliothèque vulnérable) ?"
+      placeholder: "Exemple : Problème causé par une mise à jour récente de X"
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "⚠️ **Merci de signaler ce problème en respectant les bonnes pratiques de divulgation responsable !** 🚀"

@@ -1,0 +1,106 @@
+name: "Modification de l'application"
+description: "Proposer une amélioration, une refonte ou un ajout de fonctionnalité"
+title: "[App] {Titre de la modification}"
+labels: ["enhancement", "application", "feature"]
+assignees: []
+
+body:
+  - type: markdown
+    attributes:
+      value: |
+        ## 🎯 Objectif
+        Décrire clairement la modification demandée et son impact sur l'application.
+
+  - type: textarea
+    id: problem
+    attributes:
+      label: "🚨 Problème ou besoin identifié"
+      description: "Expliquez le problème que cette modification vise à résoudre ou l'amélioration souhaitée."
+      placeholder: "Exemple : L'interface actuelle ne permet pas de rechercher les utilisateurs facilement..."
+    validations:
+      required: true
+
+  - type: textarea
+    id: solution
+    attributes:
+      label: "💡 Proposition de solution"
+      description: "Décrire la solution envisagée et comment elle pourrait être implémentée."
+      placeholder: |
+        Exemple :
+        - Ajouter une barre de recherche dans la section utilisateur
+        - Optimiser les requêtes SQL pour améliorer la rapidité de filtrage
+    validations:
+      required: true
+
+  - type: textarea
+    id: scope
+    attributes:
+      label: "📌 Périmètre"
+      description: "Quels composants de l'application sont impactés par cette modification ?"
+      placeholder: |
+        - Frontend (React, Vue, Angular…)
+        - Backend (API, BDD…)
+        - Infra (Docker, Kubernetes…)
+    validations:
+      required: false
+
+  - type: checkboxes
+    id: benefits
+    attributes:
+      label: "📈 Bénéfices attendus"
+      options:
+        - label: "Amélioration des performances"
+          required: false
+        - label: "Meilleure expérience utilisateur"
+          required: false
+        - label: "Facilité de maintenance"
+          required: false
+        - label: "Ajout d'une nouvelle fonctionnalité"
+          required: false
+
+  - type: textarea
+    id: tech_details
+    attributes:
+      label: "⚙️ Détails techniques"
+      description: "Si nécessaire, détaillez les technologies, bibliothèques ou méthodes qui seront utilisées."
+      placeholder: "Exemple : Ajouter une indexation Elasticsearch, refactoriser en TypeScript..."
+    validations:
+      required: false
+
+  - type: textarea
+    id: risks
+    attributes:
+      label: "⚠️ Risques et contraintes"
+      description: "Quels sont les impacts possibles sur le reste de l'application ?"
+      placeholder: |
+        - Risque de régression sur d'autres fonctionnalités
+        - Nécessité de modifier le modèle de données
+    validations:
+      required: false
+
+  - type: dropdown
+    id: priority
+    attributes:
+      label: "🚀 Priorité"
+      description: "Niveau d'urgence de cette modification"
+      options:
+        - "Haute (Critique pour l'application)"
+        - "Moyenne (Amélioration importante mais non bloquante)"
+        - "Basse (Modification souhaitée mais pas prioritaire)"
+    validations:
+      required: false
+
+  - type: textarea
+    id: dependencies
+    attributes:
+      label: "🔗 Dépendances et prérequis"
+      description: "Autres tickets ou actions à réaliser avant cette modification"
+      placeholder: |
+        - Validation d’un design UI/UX
+        - Migration de base de données nécessaire ?
+    validations:
+      required: false
+
+  - type: markdown
+    attributes:
+      value: "Merci d'avance pour ta contribution ! 🚀"
