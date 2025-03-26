@@ -35,3 +35,28 @@ resource "aws_instance" "chess_server" {
     Name = "ChessServer"
   }
 }
+
+resource "aws_iam_role" "cognito_opensearch_access" {
+  name = "CognitoOpenSearchAccess"
+
+  assume_role_policy = jsonencode({
+    Version = "2012-10-17"
+    Statement = [{
+      Effect = "Allow"
+      Principal = {
+        Federated = "cognito-identity.amazonaws.com"
+      }
+      Action = "sts:AssumeRoleWithWebIdentity"
+      Condition = {
+        StringEquals = {
+          "cognito-identity.amazonaws.com:aud" = aws_cognito_identity_pool.chess_identity.id
+        }
+      }
+    }]
+  })
+}
+
+resource "aws_iam_role_policy_attachment" "attach_opensearch" {
+  role       = aws_iam_role.cognito_opensearch_access.name
+  policy_arn = "arn:aws:iam::aws:policy/AmazonOpenSearchServiceFullAccess"
+}

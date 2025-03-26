@@ -10,15 +10,19 @@ resource "aws_wafv2_ip_set" "malicious_ips" {
   }
 }
 
-resource "aws_wafv2_rule_group" "denylist_rule" {
+resource "aws_wafv2_rule_group" "malicious_ips" {
   name     = "MaliciousListRule"
   scope    = "REGIONAL"
   capacity = 100
+  visibility_config {
+      cloudwatch_metrics_enabled = true
+      metric_name                = "rule-1"
+      sampled_requests_enabled   = false
+  }
 
   rule {
     name     = "BlockMaliciousIPs"
     priority = 1
-
     action {
       block {}
     }

@@ -33,3 +33,8 @@ resource "aws_lb_listener" "https" {
     target_group_arn = aws_lb_target_group.chess_app_tg.arn
   }
 }
+
+resource "aws_wafv2_web_acl_association" "alb_waf_attach" {
+  resource_arn = aws_lb.main.arn
+  web_acl_arn  = aws_wafv2_web_acl.main.arn
+}

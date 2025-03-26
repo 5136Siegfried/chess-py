@@ -1,14 +1,14 @@
 name: Terraform - Déploiement de l'Infra
 
 on:
-  push:
-    branches:
-      - main
-    paths:
-      - 'infra/chess-server/terraform/**'
+  workflow_run:
+    workflows: ["CI/CD Dispatcher"]
+    types:
+      - completed
 
 jobs:
   terraform:
+    if: ${{ github.event.workflow_run.conclusion == 'success' && github.event.workflow_run.outputs.terraform == 'true' }}
     runs-on: ubuntu-latest
 
     steps:
