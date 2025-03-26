@@ -1,0 +1,19 @@
+# .github/workflows/trivy.yml
+name: Trivy Docker Scan
+
+on:
+  push:
+    paths:
+      - 'infra/chess-server/app/**'
+
+jobs:
+  scan:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run Trivy
+        uses: aquasecurity/trivy-action@master
+        with:
+          image-ref: 'chess_server'
+          scan-type: 'image'
+          format: 'table'

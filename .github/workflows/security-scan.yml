@@ -1,0 +1,70 @@
+name: 🔐 Security Scan
+
+on:
+  pull_request:
+    branches: [main]
+
+jobs:
+  security:
+    name: Static Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - uses: actions/checkout@v3
+
+      - name: Install tfsec
+        run: |
+          curl -s https://raw.githubusercontent.com/aquasecurity/tfsec/master/scripts/install_linux.sh | bash
+
+      - name: Install trivy
+        run: |
+          curl -sfL https://raw.githubusercontent.com/aquasecurity/trivy/main/contrib/install.sh | sh -s -- -b /usr/local/bin
+
+      - name: Run tfsec
+        run: tfsec infra/chess-server/terraform --format=json > tfsec_report.json
+      - name: Fail if HIGH tfsec
+        run: |
+          COUNT=$(jq '[.results[] | select(.severity == "HIGH")] | length' tfsec_report.json)
+          if [ "$COUNT" -gt 0 ]; then
+            echo "::error file=tfsec_report.json::$COUNT HIGH severity findings"
+            exit 1
+          fi
+
+
+      - name: Run Trivy (config scan)
+        run: trivy config infra/chess-server/app --format json > trivy_report.json
+      - name: Fail if HIGH trivy
+        run: |
+          COUNT=$(jq '[.Results[].Vulnerabilities[]? | select(.Severity == "HIGH")] | length' trivy_report.json)
+          if [ "$COUNT" -gt 0 ]; then
+            echo "::error file=trivy_report.json::$COUNT HIGH severity vulnerabilities"
+            exit 1
+          fi
+
+
+      - name: Create Markdown Summary
+        run: |
+          echo "## 🔐 Résultats Sécurité" > security_summary.md
+          echo "### 🚨 tfsec" >> security_summary.md
+          jq -r '.results[] | "- [\(.severity)] \(.rule_id): \(.description)"' tfsec_report.json >> security_summary.md || echo "_Aucune alerte tfsec_" >> security_summary.md
+
+          echo -e "\n### 🐳 trivy (Dockerfile)" >> security_summary.md
+          jq -r '.Results[].Vulnerabilities[]? | "- [\(.Severity)] \(.VulnerabilityID): \(.Title)"' trivy_report.json >> security_summary.md || echo "_Aucune alerte trivy_" >> security_summary.md
+
+      - name: Comment PR with report
+        uses: peter-evans/create-or-update-comment@v3
+        with:
+          issue-number: ${{ github.event.pull_request.number }}
+          body-file: security_summary.md
+      - name: Install bandit
+        run: pip install bandit
+
+      - name: Run bandit
+        run: bandit -r src -f json -o bandit_report.json
+      - name: Fail if HIGH bandit
+        run: |
+          COUNT=$(jq '[.results[] | select(.issue_severity == "HIGH")] | length' bandit_report.json)
+          if [ "$COUNT" -gt 0 ]; then
+            echo "::error file=bandit_report.json::$COUNT HIGH severity Python issues"
+            exit 1
+          fi

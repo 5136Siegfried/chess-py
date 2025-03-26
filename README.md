@@ -9,3 +9,5 @@ SSH_PRIVATE_KEY	Clé privée pour se connecter à EC2
 EC2_HOST	Adresse IP publique de l’instance EC2
 DOCKERHUB_USERNAME	Nom d’utilisateur Docker Hub
 DOCKERHUB_PASSWORD	Mot de passe Docker Hub
+
+![Security Scan](https://github.com/5136Siegfried/chess-py/actions/workflows/security-scan.yml/badge.svg)

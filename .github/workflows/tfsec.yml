@@ -1,0 +1,15 @@
+# .github/workflows/tfsec.yml
+name: tfsec
+
+on:
+  push:
+    paths:
+      - 'infra/**/*.tf'
+
+jobs:
+  tfsec:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Run tfsec
+        uses: aquasecurity/tfsec-action@v1.0.0
